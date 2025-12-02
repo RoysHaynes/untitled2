@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow 1 — Tips</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="header"></div>
+    
+<div class="card">
+  <div class="hd"><h2>Improvement Tips</h2></div>
+  <div class="bd">
+    <ul id="tips" style="margin:0 0 12px 18px; line-height:1.6;"></ul>
+    <div class="btns">
+      <a class="btn" href="#">Add to Training Plan</a>
+      <a class="btn ghost" href="prt-results.html">Back to Results</a>
+      <a class="btn secondary" href="index.html">Home</a>
+    </div>
+  </div>
+</div>
+
+    <footer>© PRT Pro Demo — 2025-11-10</footer>
+  </div>
+<script src="app.js"></script>
+<script>
+
+renderHeader("Flow 1 — Tips");
+const { input } = loadPRT();
+if (!input || !input.pushups) {
+  window.location.href = 'prt-entry.html';
+}
+
+const tips = [];
+if (Number(input.pushups||0) < 60) tips.push("Add 3× weekly push-up EMOM: 10 reps every minute for 10 minutes.");
+if (mmssToSec(input.plank) < 150) tips.push("Progressive planks: 3 sets to near-fatigue, finish with dead bug holds.");
+if (mmssToSec(input.run) > 780) tips.push("Introduce tempo runs (20 min at comfortably hard pace) 2× per week.");
+if (tips.length === 0) tips.push("Nice work — no glaring weaknesses. Maintain consistency and progressive overload.");
+
+document.getElementById('tips').innerHTML = tips.map(t=>`<li>${t}</li>`).join("");
+
+</script>
+</body>
+</html>

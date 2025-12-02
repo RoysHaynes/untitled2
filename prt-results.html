@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow 1 — PRT Results</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="header"></div>
+    
+<div class="grid col-2">
+  <div class="card">
+    <div class="hd"><h2>Your Results</h2></div>
+    <div class="bd">
+      <div class="kpi"><div class="val" id="score">0</div><span class="pill" id="cat">—</span></div>
+      <div class="sub" style="margin-top:6px;margin-bottom:6px;">Rubric placement</div>
+      <div class="progress"><b id="bar" style="width: 0%"></b></div>
+      <div class="sub" style="display:flex; justify-content:space-between; margin-top:6px;">
+        <span>Unsat</span><span>Outstanding</span>
+      </div>
+      <div class="btns" style="margin-top:12px;">
+        <a class="btn" href="prt-tips.html">View Tips</a>
+        <a class="btn ghost" href="prt-entry.html">Edit Inputs</a>
+        <a class="btn secondary" href="index.html">Home</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="hd"><h2>Event Comparison</h2></div>
+    <div class="bd bargrid">
+      <div class="barrow"><div>Push‑ups</div>
+        <div class="bar" id="bar-pu"><i class="you"></i><i class="std"></i></div>
+      </div>
+      <div class="barrow"><div>Plank (sec)</div>
+        <div class="bar" id="bar-plank"><i class="you"></i><i class="std"></i></div>
+      </div>
+      <div class="barrow"><div>Run (better↑)</div>
+        <div class="bar" id="bar-run"><i class="you"></i><i class="std"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <footer>© PRT Pro Demo — 2025-11-10</footer>
+  </div>
+<script src="app.js"></script>
+<script>
+
+renderHeader("Flow 1 — PRT Results");
+const { input, result } = loadPRT();
+if (!result || !Number.isFinite(result.score)) {
+  window.location.href = 'prt-entry.html';
+}
+
+document.getElementById('score').textContent = result.score ?? 0;
+document.getElementById('cat').textContent = result.category || '—';
+document.getElementById('bar').style.width = (result.score||0) + '%';
+
+// simple bars
+// Push-ups standard 60 reps
+const puPct = Math.min(100, (Number(input.pushups||0)/60)*100);
+document.getElementById('bar-pu').style.setProperty('--w', puPct+'%');
+document.getElementById('bar-pu').style.setProperty('--s', '60%');
+
+// Plank standard 150s
+const plankPct = Math.min(100, ((result.plankSec||0)/150)*100);
+document.getElementById('bar-plank').style.setProperty('--w', plankPct+'%');
+document.getElementById('bar-plank').style.setProperty('--s', '50%');
+
+// Run: show transformed score vs std 420
+const runPct = Math.min(100, ((result.runScore||0)/420)*100);
+document.getElementById('bar-run').style.setProperty('--w', runPct+'%');
+document.getElementById('bar-run').style.setProperty('--s', '60%');
+
+</script>
+</body>
+</html>

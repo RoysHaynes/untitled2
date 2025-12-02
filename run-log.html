@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow 2 — Log Run</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="header"></div>
+    
+<div class="card">
+  <div class="hd"><h2>Flow 2 — Log a Run</h2></div>
+  <div class="bd grid">
+    <div class="row">
+      <div>
+        <label>Distance (mi)</label>
+        <input id="dist" value="3.00" />
+      </div>
+      <div>
+        <label>Time (mm:ss)</label>
+        <input id="time" value="24:00" />
+      </div>
+      <div>
+        <label>Date & Time</label>
+        <input id="dt" type="datetime-local" />
+      </div>
+      <div>
+        <label>Notes</label>
+        <textarea id="notes" placeholder="Hot day, headwind, hills…"></textarea>
+      </div>
+    </div>
+    <div class="btns">
+      <button id="save" class="btn">Save Run</button>
+      <a href="index.html" class="btn ghost">Cancel</a>
+    </div>
+  </div>
+</div>
+
+    <footer>© PRT Pro Demo — 2025-11-10</footer>
+  </div>
+<script src="app.js"></script>
+<script>
+
+renderHeader("Flow 2 — Run Log");
+
+const dist = document.getElementById('dist');
+const time = document.getElementById('time');
+const dt = document.getElementById('dt');
+const notes = document.getElementById('notes');
+
+(function setNow(){
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  dt.value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+})();
+
+document.getElementById('save').addEventListener('click', ()=>{
+  const run = { distance: dist.value, time: time.value, date: dt.value, notes: notes.value };
+  saveRun(run);
+  window.location.href = 'run-review.html';
+});
+
+</script>
+</body>
+</html>

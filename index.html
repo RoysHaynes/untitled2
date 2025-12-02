@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PRT Pro — Home</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="container">
+    <div id="header" class="header"></div>
+
+    <!-- ======= LOGIN CARD (shown if no user) ======= -->
+    <section id="login-view">
+        <div class="card">
+            <div class="hd">
+                <h2>Sign in to PRT Pro</h2>
+            </div>
+            <div class="bd grid">
+                <p class="sub">Demo login (no backend): we’ll store your profile in <code>localStorage</code> so your flows can greet you and “continue where you left off.”</p>
+                <div class="row">
+                    <div>
+                        <label for="name">Full name</label>
+                        <input id="name" placeholder="e.g., Roy Haynes" autocomplete="name" />
+                    </div>
+                    <div>
+                        <label for="unit">Unit / Battalion</label>
+                        <input id="unit" placeholder="e.g., NROTC San Diego" />
+                    </div>
+                    <div>
+                        <label for="email">Email (optional)</label>
+                        <input id="email" type="email" placeholder="you@example.mil" autocomplete="email" />
+                    </div>
+                    <div>
+                        <label for="remember">Remember me</label>
+                        <select id="remember">
+                            <option value="yes" selected>Yes (store locally)</option>
+                            <option value="no">No (clear on logout)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btns">
+                    <button class="btn" id="login-btn">Sign In</button>
+                    <button class="btn secondary" id="guest-btn" type="button">Continue as Guest</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======= HOME ACTIONS (shown after login) ======= -->
+    <section id="home-view" style="display:none;">
+        <div class="card">
+            <div class="hd">
+                <h2 id="welcome">Welcome</h2>
+                <div class="btns">
+                    <button class="btn ghost" id="logout-btn">Log out</button>
+                </div>
+            </div>
+            <div class="bd">
+                <p class="sub" id="subtitle">Choose what you’d like to do:</p>
+
+                <!-- Suggested next step if we detect prior progress -->
+                <div id="continue-block" style="display:none; margin-bottom:14px;">
+                    <div class="pill" id="continue-pill">Continue where you left off</div>
+                    <div class="btns" style="margin-top:8px;" id="continue-buttons"></div>
+                </div>
+
+                <div class="grid col-2" style="margin-top:8px;">
+                    <div class="card">
+                        <div class="hd"><h2>🏋️ PRT Tracker</h2></div>
+                        <div class="bd">
+                            <p class="sub">Log push-ups, plank, and 1.5-mile time to see your score and improvement tips.</p>
+                            <div class="btns">
+                                <a href="prt-entry.html" class="btn">Start PRT</a>
+                                <a href="prt-results.html" class="btn secondary">View last results</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="hd"><h2>🏃 Run Log</h2></div>
+                        <div class="bd">
+                            <p class="sub">Save a run, review pace, and post to shipmates.</p>
+                            <div class="btns">
+                                <a href="run-log.html" class="btn">Log a run</a>
+                                <a href="run-review.html" class="btn secondary">Review last run</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="hd"><h2>🏅 Leaderboard</h2></div>
+                        <div class="bd">
+                            <p class="sub">See how you rank on runs, push-ups, planks, and overall PRT.</p>
+                            <div class="btns">
+                                <a href="leaderboard.html" class="btn">Open Leaderboard</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="hd"><h2>⚙️ Quick Actions</h2></div>
+                        <div class="bd">
+                            <div class="btns">
+                                <a href="prt-tips.html" class="btn secondary">Training tips</a>
+                                <a href="prt-entry.html" class="btn secondary">Update PRT inputs</a>
+                                <a href="run-post.html" class="btn secondary">Post a saved run</a>
+                            </div>
+                            <p class="sub" style="margin-top:10px;">Tip: PRT and Run data are stored locally so you can hop between pages without losing context.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer>© PRT Pro Demo — <span id="today"></span></footer>
+</div>
+
+<script src="app.js"></script>
+<script>
+    // Header/nav
+    renderHeader("PRT Pro — Home");
+
+    // Date in footer
+    document.getElementById("today").textContent = new Date().toISOString().slice(0,10);
+
+    // Elements
+    const loginView = document.getElementById("login-view");
+    const homeView  = document.getElementById("home-view");
+
+    const nameEl = document.getElementById("name");
+    const unitEl = document.getElementById("unit");
+    const emailEl = document.getElementById("email");
+    const rememberEl = document.getElementById("remember");
+
+    const loginBtn = document.getElementById("login-btn");
+    const guestBtn = document.getElementById("guest-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+
+    const welcome = document.getElementById("welcome");
+    const subtitle = document.getElementById("subtitle");
+    const continueBlock = document.getElementById("continue-block");
+    const continueButtons = document.getElementById("continue-buttons");
+    const continuePill = document.getElementById("continue-pill");
+
+    function getUser(){
+        try { return JSON.parse(localStorage.getItem("prt_user") || "null"); } catch { return null; }
+    }
+    function setUser(u){
+        if (u) localStorage.setItem("prt_user", JSON.stringify(u));
+        else localStorage.removeItem("prt_user");
+    }
+
+    function show(view){
+        loginView.style.display = (view === "login" ? "block" : "none");
+        homeView.style.display  = (view === "home"  ? "block" : "none");
+    }
+
+    function hydrateHome(){
+        const user = getUser();
+        const displayName = user?.name || "Shipmate";
+        const displayUnit = user?.unit ? " • " + user.unit : "";
+
+        welcome.textContent = `Welcome, ${displayName}${displayUnit}`;
+        subtitle.textContent = "Choose what you’d like to do:";
+        renderContinue();
+    }
+
+    function renderContinue(){
+        // Look for saved progress
+        const prtResult = JSON.parse(localStorage.getItem("prt_result") || "null");
+        const prtInput  = JSON.parse(localStorage.getItem("prt_input") || "null");
+        const runInput  = JSON.parse(localStorage.getItem("run_input") || "null");
+
+        // Decide which “continue” CTAs to show
+        const ctAs = [];
+        if (prtResult?.score) {
+            ctAs.push({ label: "Continue PRT (Results)", href: "prt-results.html" });
+        } else if (prtInput?.pushups || prtInput?.plank || prtInput?.run) {
+            ctAs.push({ label: "Continue PRT (Entry)", href: "prt-entry.html" });
+        }
+
+        if (runInput?.distance || runInput?.time) {
+            ctAs.push({ label: "Continue Run (Review)", href: "run-review.html" });
+        }
+
+        continueButtons.innerHTML = "";
+        if (ctAs.length) {
+            ctAs.forEach(c => {
+                const a = document.createElement("a");
+                a.className = "btn";
+                a.href = c.href;
+                a.textContent = c.label;
+                continueButtons.appendChild(a);
+            });
+            continuePill.textContent = "Continue where you left off";
+            continueBlock.style.display = "block";
+        } else {
+            continueBlock.style.display = "none";
+        }
+    }
+
+    function validateName(v){ return (v || "").trim().length >= 2; }
+
+    loginBtn.addEventListener("click", () => {
+        const name = nameEl.value.trim();
+        const unit = unitEl.value.trim();
+        const email = emailEl.value.trim();
+        const remember = rememberEl.value === "yes";
+
+        if (!validateName(name)) {
+            alert("Please enter your name (2+ characters).");
+            nameEl.focus();
+            return;
+        }
+
+        setUser({ name, unit, email, remember, signedInAt: Date.now() });
+        show("home");
+        hydrateHome();
+    });
+
+    guestBtn.addEventListener("click", () => {
+        setUser({ name: "Guest", unit: "", email: "", remember: false, signedInAt: Date.now() });
+        show("home");
+        hydrateHome();
+    });
+
+    logoutBtn.addEventListener("click", () => {
+        // Optionally clear transient data if they didn't choose remember
+        const user = getUser();
+        setUser(null);
+        if (user && !user.remember) {
+            localStorage.removeItem("prt_input");
+            localStorage.removeItem("prt_result");
+            localStorage.removeItem("run_input");
+            localStorage.removeItem("run_posted");
+        }
+        show("login");
+    });
+
+    // Boot
+    const existing = getUser();
+    if (existing) {
+        show("home");
+        hydrateHome();
+    } else {
+        show("login");
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow 2 — Run Review</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="header"></div>
+    
+<div class="grid col-2">
+  <div class="card">
+    <div class="hd"><h2>Run Review</h2></div>
+    <div class="bd">
+      <div class="sub" id="when">—</div>
+      <div class="kpi" style="margin:6px 0 2px 0;">
+        <div class="val" id="head">—</div>
+      </div>
+      <div class="sub">Total time: <span id="total">—</span></div>
+      <p class="sub" id="notes-out" style="margin-top:10px;"></p>
+      <div class="btns" style="margin-top:10px;">
+        <a class="btn" href="run-post.html">Post to Shipmates</a>
+        <a class="btn ghost" href="run-log.html">Edit</a>
+        <a class="btn secondary" href="index.html">Home</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="hd"><h2>Pace Trend (demo)</h2></div>
+    <div class="bd">
+      <div class="barrow"><div>Mon</div><div class="bar" style="--w: 80%"></div></div>
+      <div class="barrow"><div>Tue</div><div class="bar" style="--w: 78%"></div></div>
+      <div class="barrow"><div>Wed</div><div class="bar" style="--w: 74%"></div></div>
+      <div class="barrow"><div>Thu</div><div class="bar" style="--w: 72%"></div></div>
+      <div class="barrow"><div>Fri</div><div class="bar" id="trend"></div></div>
+    </div>
+  </div>
+</div>
+
+    <footer>© PRT Pro Demo — 2025-11-10</footer>
+  </div>
+<script src="app.js"></script>
+<script>
+
+renderHeader("Flow 2 — Run Review");
+const run = loadRun();
+if (!run || !run.distance) window.location.href = 'run-log.html';
+
+const d = parseFloat(run.distance)||0;
+const t = mmssToSec(run.time)||0;
+const pace = d>0 ? t/d : 0;
+
+document.getElementById('when').textContent = new Date(run.date).toLocaleString();
+document.getElementById('head').textContent = `${d.toFixed(2)} mi @ ${secToMMSS(pace)} /mi`;
+document.getElementById('total').textContent = run.time;
+document.getElementById('notes-out').textContent = run.notes ? `“${run.notes}”` : '';
+document.getElementById('trend').style.setProperty('--w', Math.max(40, Math.min(90, 600/Math.max(1,pace))) + '%');
+
+</script>
+</body>
+</html>

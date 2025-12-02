@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow 1 — PRT Entry</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="header"></div>
+    
+<div class="card">
+  <div class="hd"><h2>Flow 1 — Log PRT Score</h2></div>
+  <div class="bd grid">
+    <div class="row">
+      <div>
+        <label>Push-ups (reps)</label>
+        <input id="pu" type="number" placeholder="e.g., 55" value="55" />
+      </div>
+      <div>
+        <label>Plank (mm:ss)</label>
+        <input id="plank" placeholder="mm:ss" value="02:00" />
+      </div>
+      <div>
+        <label>1.5-mile Run (mm:ss)</label>
+        <input id="run" placeholder="mm:ss" value="12:30" />
+      </div>
+      <div>
+        <label>Alternate Cardio</label>
+        <select id="alt">
+          <option value="none">None</option>
+          <option>Bike</option>
+          <option>Swim</option>
+          <option>Row</option>
+        </select>
+      </div>
+    </div>
+    <div class="btns">
+      <button id="submit" class="btn">Submit</button>
+      <a href="index.html" class="btn ghost">Cancel</a>
+    </div>
+  </div>
+</div>
+
+    <footer>© PRT Pro Demo — 2025-11-10</footer>
+  </div>
+<script src="app.js"></script>
+<script>
+
+renderHeader("Flow 1 — PRT Entry");
+const pu = document.getElementById('pu');
+const plank = document.getElementById('plank');
+const run = document.getElementById('run');
+const alt = document.getElementById('alt');
+const submit = document.getElementById('submit');
+
+const prev = loadPRT();
+if (prev && prev.input) {
+  if (prev.input.pushups) pu.value = prev.input.pushups;
+  if (prev.input.plank) plank.value = prev.input.plank;
+  if (prev.input.run) run.value = prev.input.run;
+  if (prev.input.alt) alt.value = prev.input.alt;
+}
+
+submit.addEventListener('click', ()=>{
+  const form = { pushups: pu.value, plank: plank.value, run: run.value, alt: alt.value };
+  savePRT(form);
+  window.location.href = 'prt-results.html';
+});
+
+</script>
+</body>
+</html>

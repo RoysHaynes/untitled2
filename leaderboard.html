@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow 3 — Leaderboard</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="header"></div>
+    
+<div class="card">
+  <div class="hd">
+    <h2>Flow 3 — Leaderboard</h2>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="runs">Runs</button>
+      <button class="tab" data-tab="pushups">Push‑ups</button>
+      <button class="tab" data-tab="planks">Planks</button>
+      <button class="tab" data-tab="prt">Overall PRT</button>
+    </div>
+  </div>
+  <div class="bd grid col-2">
+    <div>
+      <div id="lb-list" class="grid"></div>
+      <div class="btns" style="margin-top:12px;">
+        <a href="index.html" class="btn secondary">Home</a>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="hd"><h2>Distribution (demo)</h2></div>
+        <div class="bd" id="lb-bars" class="bargrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <footer>© PRT Pro Demo — 2025-11-10</footer>
+  </div>
+<script src="app.js"></script>
+<script>
+
+renderHeader("Flow 3 — Leaderboard");
+
+const lbData = {
+  runs: [
+    { name: 'B. Bushnell', score: 42, delta: +2 },
+    { name: 'M. Castulo', score: 38, delta: -1 },
+    { name: 'E. Lackey', score: 36, delta: 0 },
+    { name: 'R. Haynes', score: 35, delta: +3 },
+    { name: 'A. Rivera', score: 31, delta: +1 }
+  ],
+  pushups: [
+    { name: 'B. Bushnell', score: 320, delta: +4 },
+    { name: 'R. Haynes', score: 295, delta: +2 },
+    { name: 'E. Lackey', score: 280, delta: -2 },
+    { name: 'M. Castulo', score: 250, delta: +1 },
+    { name: 'A. Rivera', score: 210, delta: 0 }
+  ],
+  planks: [
+    { name: 'R. Haynes', score: 780, delta: 0 },
+    { name: 'E. Lackey', score: 720, delta: +1 },
+    { name: 'B. Bushnell', score: 690, delta: -2 },
+    { name: 'A. Rivera', score: 650, delta: +2 },
+    { name: 'M. Castulo', score: 610, delta: 0 }
+  ],
+  prt: [
+    { name: 'B. Bushnell', score: 93, delta: +1 },
+    { name: 'R. Haynes', score: 91, delta: 0 },
+    { name: 'E. Lackey', score: 88, delta: +2 },
+    { name: 'M. Castulo', score: 82, delta: -1 },
+    { name: 'A. Rivera', score: 79, delta: 0 }
+  ]
+};
+
+const lbTabs = document.querySelectorAll('.tab');
+const lbList = document.getElementById('lb-list');
+const lbBars = document.getElementById('lb-bars');
+
+function renderLB(kind='runs'){
+  lbList.innerHTML = '';
+  const arr = lbData[kind];
+  arr.forEach((p, i)=>{
+    const row = document.createElement('div');
+    row.className = 'lb-row';
+    const dClass = p.delta>0? 'up' : p.delta<0? 'down' : 'neutral';
+    row.innerHTML = `<div style="font-weight:700; font-size:18px;">${i+1}</div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="height:34px;width:34px;border-radius:50%;background:#2b334a;display:inline-grid;place-items:center;">${p.name[0]}</div>
+        <div><div style="font-weight:600;">${p.name}</div><div class='sub'>This month</div></div>
+      </div>
+      <div style="font-weight:700;">${p.score}</div>
+      <div class="delta ${dClass}">${p.delta>0? "+"+p.delta : p.delta}</div>`;
+    lbList.appendChild(row);
+  });
+  lbBars.innerHTML = '';
+  arr.forEach((p)=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'barrow';
+    const max = kind==='prt'? 100: kind==='runs'? 60: kind==='pushups'? 350: 900;
+    wrap.innerHTML = `<div>${p.name}</div><div class="bar" style="--w:${Math.min(100, (p.score/max)*100)}%"></div>`;
+    lbBars.appendChild(wrap);
+  });
+}
+
+lbTabs.forEach(t=>t.addEventListener('click', ()=>{
+  lbTabs.forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  renderLB(t.dataset.tab);
+}));
+
+renderLB('runs');
+
+</script>
+</body>
+</html>

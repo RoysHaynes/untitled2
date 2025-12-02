@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow 2 — Post</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="header"></div>
+    
+<div class="card">
+  <div class="hd"><h2>Post Confirmation</h2></div>
+  <div class="bd">
+    <div class="sub">You • <span id="when2">—</span></div>
+    <div class="pill" style="margin:8px 0;">Run summary</div>
+    <div class="sub" id="summary">—</div>
+    <div class="row" style="margin-top:12px;">
+      <div>
+        <label>Privacy</label>
+        <select id="privacy">
+          <option value="public">Public</option>
+          <option value="friends" selected>Friends Only</option>
+          <option value="private">Private</option>
+        </select>
+      </div>
+      <div></div>
+    </div>
+    <div class="btns" style="margin-top:12px;">
+      <button id="post" class="btn">Post Run</button>
+      <a class="btn ghost" href="run-review.html">Back</a>
+      <a class="btn secondary" href="index.html">Home</a>
+    </div>
+    <div id="done" class="success" style="margin-top:10px; display:none;">Your run has been shared with your shipmates!</div>
+  </div>
+</div>
+
+    <footer>© PRT Pro Demo — 2025-11-10</footer>
+  </div>
+<script src="app.js"></script>
+<script>
+
+renderHeader("Flow 2 — Post");
+const run = loadRun();
+if (!run || !run.distance) window.location.href = 'run-log.html';
+
+const d = parseFloat(run.distance)||0;
+const t = mmssToSec(run.time)||0;
+const pace = d>0 ? t/d : 0;
+
+document.getElementById('when2').textContent = new Date(run.date).toLocaleString();
+document.getElementById('summary').textContent = `${d.toFixed(2)} mi in ${run.time} • Pace ${secToMMSS(pace)} /mi`;
+
+document.getElementById('post').addEventListener('click', ()=>{
+  localStorage.setItem("run_posted", JSON.stringify({ ...run, privacy: document.getElementById('privacy').value, postedAt: Date.now() }));
+  document.getElementById('done').style.display = 'block';
+});
+
+</script>
+</body>
+</html>
